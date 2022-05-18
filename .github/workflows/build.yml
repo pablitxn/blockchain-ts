@@ -1,0 +1,37 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - 'main'
+      - 'develop'
+  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Get the repositery's code
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.13.0
+      - name: Dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Solidity Lint
+        run: npm run solhint
+      - name: Solidity Tests
+        run: npx hardhat test
+      - name: Next.js App Build
+        run: npm run build
